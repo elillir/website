@@ -14,8 +14,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description');
             $table->decimal('discount', 5, 2)->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             $table->string('image')->nullable();
             $table->timestamps();
         });

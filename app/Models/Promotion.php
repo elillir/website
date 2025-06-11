@@ -19,5 +19,8 @@ class Promotion extends Model
         'image'
     ];
 
-    protected $dates = ['start_date', 'end_date'];
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+    ];
 }
