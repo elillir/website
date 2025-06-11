@@ -2,63 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reservation;
+use App\Models\Table;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return view('reservations.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $tables = Table::where('is_available', true)->get();
+        return view('reservations.create', compact('tables'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'table_id' => 'required|exists:tables,id',
+            'customer_name' => 'required|string|max:255',
+            'customer_phone' => 'required|string|max:20',
+            'customer_email' => 'required|email|max:255',
+            'reservation_time' => 'required|date|after:now',
+            'guests_count' => 'required|integer|min:1',
+            'special_requests' => 'nullable|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $reservationTime = Carbon::parse($validated['reservation_time']);
+        $existingReservation = Reservation::where('table_id', $validated['table_id'])
+            ->where('reservation_time', '>=', $reservationTime->subHours(2))
+            ->where('reservation_time', '<=', $reservationTime->addHours(2))
+            ->exists();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if ($existingReservation) {
+            return back()->withErrors(['reservation_time' => 'Этот столик уже забронирован на выбранное время.'])->withInput();
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        Reservation::create($validated);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('home')->with('success', 'Столик успешно забронирован!');
     }
 }
