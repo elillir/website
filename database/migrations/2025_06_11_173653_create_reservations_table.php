@@ -6,21 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('table_id')->constrained()->onDelete('cascade');
+            $table->string('customer_name');
+            $table->string('customer_phone');
+            $table->string('customer_email');
+            $table->dateTime('reservation_time');
+            $table->integer('guests_count');
+            $table->text('special_requests')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('reservations');
     }
