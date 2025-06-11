@@ -3,7 +3,7 @@
         <div class="flex flex-col md:flex-row justify-between">
             <div class="mb-6 md:mb-0">
                 <h3 class="text-xl font-bold mb-4">Кафе "Уют"</h3>
-                <p>Ул. Примерная, 123</p>
+                <p>Ул. Кофейная, 123</p>
                 <p>Телефон: +7 (123) 456-78-90</p>
                 <p>Email: info@cafe-uyut.ru</p>
             </div>
